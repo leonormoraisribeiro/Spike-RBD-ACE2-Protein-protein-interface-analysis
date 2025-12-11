@@ -1,6 +1,6 @@
 # Spike-RBD-ACE2-Protein-protein-interface-analysis
 
-**Project:** Bio-Physics Exercise 2025-26
+**Project:** Bio-Physics Exercise
 
 **Objective:** To evaluate the relative contribution of interface residues to the interaction energy in the RBD-ACE2 protein-protein complex using the structure **6m0j**.
 
@@ -17,7 +17,7 @@
 ├── scripts/
 │   ├── structure_setup.py   # Setup pipeline using biobb
 │   ├── interface_analysis.py # Interface detection (Distance & ASA)
-│   └── energy_calculation.py # (In progress)
+│   └── energy_calculation.py 
 ├── README.md
 └── requirements.txt
 ```
