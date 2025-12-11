@@ -28,29 +28,29 @@
 ### 1.1 Structure Setup (BioBB)
 The raw structure **6m0j** was processed to fix experimental artifacts and prepare it for energy calculations.
 
-* [cite_start]**Tool:** `biobb_structure_checking`[cite: 33, 77].
+* **Tool:** `biobb_structure_checking`.
 * **Workflow:**
-    1.  [cite_start]**Chain Selection:** Isolated chains **E** (RBD) and **A** (ACE2)[cite: 30].
-    2.  [cite_start]**Cleaning:** Removed crystallographic waters and heteroatoms[cite: 32].
+    1.  **Chain Selection:** Isolated chains **E** (RBD) and **A** (ACE2).
+    2.  **Cleaning:** Removed crystallographic waters and heteroatoms.
     3.  **Fixing:** Added missing side-chain atoms and hydrogens.
-    4.  [cite_start]**Charges:** Added partial charges and atom types, generating a **PDBQT** file for electrostatic calculations[cite: 33].
+    4.  **Charges:** Added partial charges and atom types, generating a **PDBQT** file for electrostatic calculations.
 * **Key Outputs:**
     * `6m0j_fixed.pdb` (Clean PDB)
     * `6m0j_fixed.pdbqt` (PDB with charges/atom types)
 
 ### 1.2 Solvent Accessibility (NACCESS)
-[cite_start]To evaluate solvation effects, we calculated the Accessible Surface Area (ASA)[cite: 82].
+To evaluate solvation effects, we calculated the Accessible Surface Area (ASA).
 
 * **Calculation:** Performed on the bound complex (`A+E`) and unbound components (`A` and `E` isolated).
 * **Outputs:**
     * `.rsa` files: Residue-level data (used for quick visual analysis).
-    * [cite_start]`.asa` files: Atomic-level data (used for $\Delta G_{solv}$ calculation)[cite: 38].
+    * `.asa` files: Atomic-level data (used for $\Delta G_{solv}$ calculation).
 
 ### 1.3 Defining the Interface
-[cite_start]We implemented two complementary methods to define the interface residues[cite: 14, 23, 49]:
+We implemented two complementary methods to define the interface residues:
 
 1.  **Distance Criterion (Geometric):**
-    * [cite_start]Residues are considered part of the interface if any of their atoms are within a cut-off distance (e.g., 5Å) of an atom in the opposing chain[cite: 23].
+    * Residues are considered part of the interface if any of their atoms are within a cut-off distance (e.g., 5Å) of an atom in the opposing chain.
     * *Implementation:* Python script using `interface_distance.py`.
 
 2.  **Solvation Criterion (△ASA):**
