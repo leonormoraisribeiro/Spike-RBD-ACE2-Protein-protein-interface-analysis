@@ -87,7 +87,7 @@ $$\Delta G^{A-B} = \Delta G_{vdw} + \Delta G_{elec} + \Delta G_{solv}$$
     * **Charges:** Partial charges were successfully generated using `biobb_structure_checking` (AutoDock Tools / Gasteiger method) and read from the corrected `6m0j_fixed.pdbqt` file.
 
 ### 2.2 Implementation Details
-* **Script:** `step2_final_calculation.py`
+* **Script:** `interaction_energy.py`
 * **Interface Definition:** The calculation was restricted to interface residues defined by a change in ASA > 0.01 $Å^2$ (Total: 52 residues).
 * **Charge Correction:** The PDBQT generation pipeline was corrected to ensure partial charges were properly written to the file, avoiding the need for manual charge injection.
 
