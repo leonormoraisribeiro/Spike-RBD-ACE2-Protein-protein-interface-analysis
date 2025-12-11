@@ -53,7 +53,7 @@ The raw structure **6m0j** was processed to fix experimental artifacts and prepa
     * [cite_start]Residues are considered part of the interface if any of their atoms are within a cut-off distance (e.g., 5Å) of an atom in the opposing chain[cite: 23].
     * *Implementation:* Python script using `interface_distance.py`.
 
-2.  **Solvation Criterion ($\Delta ASA):**
+2.  **Solvation Criterion (△ASA):**
     * Residues are defined as interface if they lose solvent accessibility upon complex formation.
     * $\Delta ASA = ASA_{unbound} - ASA_{bound} > \text{cutoff}$
     * *Implementation:* Python script using `interface_asa_variation.py`.
