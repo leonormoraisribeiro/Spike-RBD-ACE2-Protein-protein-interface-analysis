@@ -58,3 +58,7 @@ We implemented two complementary methods to define the interface residues:
     * Residues are defined as interface if they lose solvent accessibility upon complex formation.
     * $\Delta ASA = ASA_{unbound} - ASA_{bound} > \text{cutoff}$
     * *Implementation:* Python script using `interface_asa_variation.py`.
+
+3. **Create a Pymol Visualization of the Interface**
+    * With the residues calculated with the △ASA, a python script was created to visualize in python the residues selected
+    * *Implementation:* Python script using `create_interface_pymol.py`.
