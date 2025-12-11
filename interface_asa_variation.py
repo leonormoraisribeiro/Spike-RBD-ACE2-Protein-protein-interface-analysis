@@ -29,9 +29,27 @@ for (chain, resnum, resname), bound in asa_bound.items():
         continue
     # compute delta
     delta = free - bound
-    if delta > 1.0:
+    if delta > 0.01:
         interface.append((chain, resname, resnum, delta))
 
 print("Interface residues:")
+i = 0
 for c, rname, rnum, d in interface:
     print(f"{c} {rname}{rnum} ΔASA={d:.2f}")
+    i += 1
+print(f"Total interface residues: {i}")
+
+with open("interface_data.py", "w") as f:
+    f.write("#This file was automatically generated\n")
+    f.write("# Format: ('Chain', ResNum)\n")
+    f.write("INTERFACE_LIST = [\n")
+    
+    interface.sort(key=lambda x: (x[0], x[2]))
+    
+    for c, rname, rnum, d in interface:
+        # Add the rest as a comment to help reading
+        f.write(f"    ('{c}', {rnum}),  # {rname} dASA={d:.2f}\n")
+    
+    f.write("]\n")
+
+print("File 'interface_data.py' created!")
