@@ -1,6 +1,7 @@
 # Spike-RBD-ACE2-Protein-protein-interface-analysis
 
 **Project:** Bio-Physics Exercise 2025-26
+
 **Objective:** To evaluate the relative contribution of interface residues to the interaction energy in the RBD-ACE2 protein-protein complex using the structure **6m0j**.
 
 ---
