@@ -63,6 +63,7 @@ We implemented two complementary methods to define the interface residues:
     * With the residues calculated with the △ASA, a python script was created to visualize in python the residues selected
     * *Implementation:* Python script using `create_interface_pymol.py`.
 
+---
 
 ## Step 2: Interaction Energy Calculation
 
@@ -100,5 +101,54 @@ The energy calculation for the 52 residues at the interface yielded the followin
 | **Electrostatics** | **-1.61** | Favorable (attractive) contribution, suggesting specific salt bridges or H-bonds stabilizing the complex. |
 | **Solvation** | **-4.11** | Favorable. Suggests a strong **hydrophobic effect**, where non-polar residues are buried upon binding. |
 | **TOTAL ($\Delta G$)**| **-71.95** | **Highly stable complex.** |
+
+---
+
+Aqui tens a secção do **README** para o **Step 3**, escrita no mesmo estilo e formato que enviaste, incorporando os scripts, metodologias e resultados que acabámos de gerar.
+
+---
+
+## Step 3: In-Silico Alanine Scanning & Hotspot Analysis
+
+**Objective:** To determine the individual contribution of each interface residue to the complex stability by mimicking a traditional Alanine Scanning experiment computationally.
+
+### 3.1 Methodology
+Instead of generating 50+ individual PDB mutant structures, we implemented a **virtual mutation algorithm** ("On-the-fly" atom masking):
+
+1.  **Rigid Body Approximation:** The backbone and remaining atoms are assumed to stay fixed (no relaxation).
+2.  **Virtual Mutation:** For the target residue, the energy calculation loop ignores all atoms except those shared with Alanine (N, C, O, CA, CB).
+3.  **$\Delta\Delta G$ Calculation:**
+    * $\Delta\Delta G = \Delta G_{mutant} - \Delta G_{WT}$
+    * **Positive $\Delta\Delta G$:** Indicates the mutation destabilizes the complex (the residue was important).
+    * **Hotspot Definition:** Residues with $\Delta\Delta G > 1.0$ kcal/mol.
+
+### 3.2 Implementation Pipeline
+We developed a unified pipeline to perform calculation, data export, and plotting.
+
+* **Input:** `interface_data.py` (List of interface residues generated in Step 1).
+* **Core Script:** `run_scanning_full.py`
+    * Imports energy functions from `interaction_energy.py`.
+    * Iterates through all interface residues.
+    * Computes $\Delta G$ for the "virtual mutant".
+    * Exports results to CSV and generates a ranked bar plot.
+* **Visualization Script:** `gerar_pymol.py`
+    * Automatically generates a PyMOL script (`.pml`) to highlight identified hotspots.
+
+### 3.3 Key Results
+The analysis identified specific "Hotspots" that are critical for the RBD-ACE2 interaction.
+
+* **Top Hotspots Identified:**
+    * **Phe486 (Chain E):** The most critical residue ($\Delta\Delta G \approx 14.8$ kcal/mol). Acts as a hydrophobic anchor penetrating the ACE2 surface.
+    * **Tyr505 (Chain E):** Provides significant stability through H-bonds and Van der Waals interactions.
+    * **Aromatic Dominance:** The top contributors (Phe, Tyr) rely heavily on ring stacking interactions.
+* **Magnitude Note:** The high absolute values (>10 kcal/mol) are a result of the rigid-body assumption (lack of structural relaxation and water solvation), but the **relative ranking** is biologically consistent with structural data.
+
+### 3.4 Files & Outputs
+
+| File | Description |
+| :--- | :--- |
+| `alanine_scanning_results.csv` | Table containing computed energies and $\Delta\Delta G$ for all 52 residues. |
+| `alanine_scanning_plot.png` |  Bar chart ranking residues by stability contribution. Red bars indicate hotspots. |
+| `visualizar_hotspots.pml` |  PyMOL script to visualize Phe486/Tyr505 anchoring into ACE2. |
 
 ---
