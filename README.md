@@ -127,7 +127,7 @@ We developed a unified pipeline to perform calculation, data export, and plottin
     * Iterates through all interface residues.
     * Computes $\Delta G$ for the "virtual mutant".
     * Exports results to CSV and generates a ranked bar plot.
-* **Visualization Script:** `gerar_pymol.py`
+* **Visualization Script:** `pymol_visualization_hotspots.py`
     * Automatically generates a PyMOL script (`.pml`) to highlight identified hotspots.
 
 ### 3.3 Key Results
@@ -145,6 +145,6 @@ The analysis identified specific "Hotspots" that are critical for the RBD-ACE2 i
 | :--- | :--- |
 | `alanine_scanning_results.csv` | Table containing computed energies and $\Delta\Delta G$ for all 52 residues. |
 | `alanine_scanning_plot.png` |  Bar chart ranking residues by stability contribution. Red bars indicate hotspots. |
-| `visualizar_hotspots.pml` |  PyMOL script to visualize Phe486/Tyr505 anchoring into ACE2. |
+| `visualize_hotspots.pml` |  PyMOL script to visualize Phe486/Tyr505 anchoring into ACE2. |
 
 ---
