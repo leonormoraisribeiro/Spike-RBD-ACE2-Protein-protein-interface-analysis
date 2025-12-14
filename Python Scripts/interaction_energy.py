@@ -62,6 +62,7 @@ def read_atomic_asa(filename):
 
 
 def guess_atom_type(atom_name, pdbqt_type, ff):
+    """Uses the PDBQT type if it exists in the forcefield, otherwise guesses by name"""
     if pdbqt_type and pdbqt_type in ff.at_types:
         return pdbqt_type
 
@@ -72,10 +73,9 @@ def guess_atom_type(atom_name, pdbqt_type, ff):
     if n.startswith('S'): return 'SA'
     return 'C'
 
+print(f"Final energy calculation for interface residues...")
 
-# ========================================================================================
-#   ORIGINAL FUNCTION — COMPUTES WT ΔG
-# ========================================================================================
+#   Original Function — COMPUTES WT ΔG
 def compute_interaction_energy(pdbqt_file,
                                asa_complex="6m0j_fixed.asa",
                                asa_A="A.asa",
@@ -172,9 +172,7 @@ def compute_interaction_energy(pdbqt_file,
         return total
 
 
-# ========================================================================================
-#   NEW FUNCTION FOR ALANINE SCANNING — *no file generation*, no OpenBabel
-# ========================================================================================
+#   function for alanine scanning 
 def compute_interaction_energy_with_ala(pdbqt_file,
                                         chain_mut,
                                         res_mut,
@@ -274,9 +272,7 @@ def compute_interaction_energy_with_ala(pdbqt_file,
         return total
 
 
-# ========================================================================================
-# RUN WT AS A TEST
-# ========================================================================================
+# run wt as a test
 if __name__ == "__main__":
     total, lj, elec, solv = compute_interaction_energy(
         PDB_FILE,
@@ -287,10 +283,8 @@ if __name__ == "__main__":
         verbose=True
     )
 
-    print("=== Interaction energy (WT) ===")
+    print("Interaction energy (WT)")
     print(f"Van der Waals:   {lj:10.4f} kcal/mol")
     print(f"Electrostatics:  {elec:10.4f} kcal/mol")
     print(f"Solvation:       {solv:10.4f} kcal/mol")
     print(f"TOTAL ΔG:        {total:10.4f} kcal/mol")
-
-
