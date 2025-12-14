@@ -126,7 +126,7 @@ Instead of generating 50+ individual PDB mutant structures, we implemented a **v
 We developed a unified pipeline to perform calculation, data export, and plotting.
 
 * **Input:** `interface_data.py` (List of interface residues generated in Step 1).
-* **Core Script:** `run_scanning_full.py`
+* **Core Script:** `alanine_scanning.py`
     * Imports energy functions from `interaction_energy.py`.
     * Iterates through all interface residues.
     * Computes $\Delta G$ for the "virtual mutant".
