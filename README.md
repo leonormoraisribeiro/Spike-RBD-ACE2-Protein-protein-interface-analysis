@@ -104,10 +104,6 @@ The energy calculation for the 52 residues at the interface yielded the followin
 
 ---
 
-Aqui tens a secção do **README** para o **Step 3**, escrita no mesmo estilo e formato que enviaste, incorporando os scripts, metodologias e resultados que acabámos de gerar.
-
----
-
 ## Step 3: In-Silico Alanine Scanning & Hotspot Analysis
 
 **Objective:** To determine the individual contribution of each interface residue to the complex stability by mimicking a traditional Alanine Scanning experiment computationally.
