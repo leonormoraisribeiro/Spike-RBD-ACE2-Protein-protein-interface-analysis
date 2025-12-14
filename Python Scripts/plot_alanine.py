@@ -1,20 +1,19 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-# === Load data ===
+# Load data
 df = pd.read_csv("alanine_scan_results.csv")
 
 # Sort residues by ΔΔG (highest = most important for stability)
 df = df.sort_values("dDG", ascending=False)
 
 # Define threshold for “important” residues
-# You can adjust the threshold depending on the plot
 threshold = df["dDG"].mean() + df["dDG"].std()
 
 # Colors: red for important, blue for others
 colors = ["red" if x >= threshold else "steelblue" for x in df["dDG"]]
 
-# === Plot ===
+# Plot
 plt.figure(figsize=(14, 6))
 plt.bar(df["Residue"], df["dDG"], color=colors)
 plt.xticks(rotation=90)
