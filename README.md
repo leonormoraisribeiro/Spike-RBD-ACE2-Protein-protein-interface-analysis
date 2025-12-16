@@ -14,12 +14,21 @@
 │   ├── 6m0j_fixed.pdbqt     # Structure with partial charges and atom types
 │   ├── *.asa                # Atomic solvent accessibility (for Energy calc)
 │   └── *.rsa                # Residue solvent accessibility (for Analysis)
-├── scripts/
+├── Python Scripts/
 │   ├── structure_setup.py   # Setup pipeline using biobb
 │   ├── interface_analysis.py # Interface detection (Distance & ASA)
-│   └── energy_calculation.py 
+│   └── energy_calculation.py
+├── Python Scripts/
+│   ├── alanine_scan_results.csv
+│   ├── alanine_scanning_plot.png # plot made for Step3
+│   ├── hotspot.png
+│   ├── interface.png
+│   ├── visualize_comparison.pml
+│   ├── visualize_distance_interface.pml
+│   ├── visualize_hotspots.pml
+│   └── visualize_interface_asa_variation.pml
 ├── README.md
-└── requirements.txt
+└── Energy analysis Project.pdf # instruction of the project
 ```
 
 ## Step 1: Structure Preparation & Interface Definition
