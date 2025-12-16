@@ -272,6 +272,89 @@ def compute_interaction_energy_with_ala(pdbqt_file,
         return total
 
 
+def compute_wt_residue_contribution(pdbqt_file,
+                                    target_chain,
+                                    target_res,
+                                    asa_complex="6m0j_fixed.asa",
+                                    asa_A="A.asa",
+                                    asa_E="B.asa",
+                                    verbose=False):
+
+    
+    
+    ff = VdwParamset(VDW_PRM_FILE)
+    asa_atom_c = read_atomic_asa(asa_complex)
+    asa_atom_a = read_atomic_asa(asa_A)
+    asa_atom_e = read_atomic_asa(asa_E)
+
+    atoms_target = []
+    atoms_other_chain = []
+    E_solv = 0.0
+
+    with open(pdbqt_file, "r") as f:
+        for line in f:
+            if not line.startswith(("ATOM", "HETATM")):
+                continue
+
+            ch = line[21]
+            rn = int(line[22:26])
+            name = line[12:16].strip()
+            
+            x = float(line[30:38])
+            y = float(line[38:46])
+            z = float(line[46:54])
+            q = float(line[70:76]) if len(line) > 76 else 0.0
+            
+            pdbqt_type = line[77:].strip()
+            atype = guess_atom_type(name, pdbqt_type, ff)
+            p = ff.at_types.get(atype, ff.at_types["C"])
+            
+            atom_data = {"x": x, "y": y, "z": z, "q": q, "eps": p["eps"], "sig": p["sig"]}
+
+            if ch == target_chain and rn == target_res:
+                atoms_target.append(atom_data)
+                
+                # Solvatação apenas para este resíduo
+                bound = asa_atom_c.get((ch, rn, name), 0.0)
+                free = asa_atom_a.get((ch, rn, name), 0.0) if ch == "A" else asa_atom_e.get((ch, rn, name), 0.0)
+                E_solv += p["fsrf"] * (bound - free)
+
+          
+            elif ch != target_chain:
+                atoms_other_chain.append(atom_data)
+
+    # Calculate VdW and Eletrostatic between (Target) vs (other chain)
+    E_vdw = 0.0
+    E_elec = 0.0
+
+    for a1 in atoms_target:
+        for a2 in atoms_other_chain:
+            dx = a1["x"] - a2["x"]
+            dy = a1["y"] - a2["y"]
+            dz = a1["z"] - a2["z"]
+            r2 = dx*dx + dy*dy + dz*dz
+
+            if r2 < 0.1 or r2 > 144: # Cutoff 12A
+                continue
+
+            r = math.sqrt(r2)
+
+            # VdW
+            sig = 0.5 * (a1["sig"] + a2["sig"])
+            eps = math.sqrt(a1["eps"] * a2["eps"])
+            E_vdw += 4 * eps * ((sig/r)**12 - (sig/r)**6)
+
+            # Eletrostática
+            if abs(a1["q"]) > 1e-4 and abs(a2["q"]) > 1e-4:
+                denom = 1 - 7.7839 * math.exp(-0.3153*r)
+                denom = max(denom, 0.01)
+                eps_r = max((86.9525 / denom) - 8.5525, 1.0)
+                E_elec += 332.16 * a1["q"] * a2["q"] / (eps_r * r)
+
+    total = E_vdw + E_elec + E_solv
+    return total
+
+
 # run wt as a test
 if __name__ == "__main__":
     total, lj, elec, solv = compute_interaction_energy(
