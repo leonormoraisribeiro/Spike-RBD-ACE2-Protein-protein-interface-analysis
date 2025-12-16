@@ -63,6 +63,17 @@ We implemented two complementary methods to define the interface residues:
     * With the residues calculated with the △ASA, a python script was created to visualize in python the residues selected
     * *Implementation:* Python script using `create_interface_pymol.py`.
 
+### 1.4 Interface Definition Comparison
+To validate the accuracy of our interface definition, we developed a script to statistically compare the **Geometric** approach (Distance < 8.0Å) against the **Thermodynamic** approach ($\Delta$ASA > 0.01 $\mathring{A}^2$).
+
+* **Script:** `compare_interfaces.py`
+* **Method:** Calculated the set intersection and the **Jaccard Index** ($J = \frac{|A \cap B|}{|A \cup B|}$) to quantify the overlap between the two criteria.
+
+**Key Results:**
+* **Geometric Interface (Distance):** 112 residues.
+* **Thermodynamic Interface (Energy):** 52 residues.
+* **Intersection:** 52 residues.
+* **Jaccard Index:** 0.4643.
 ---
 
 ## Step 2: Interaction Energy Calculation
