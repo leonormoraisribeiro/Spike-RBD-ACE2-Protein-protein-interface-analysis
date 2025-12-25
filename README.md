@@ -169,80 +169,98 @@ The analysis identified specific "Hotspots" that are critical for the RBD-ACE2 i
 
 ---
 
-## 
+# Step 5 – Modeling Real SARS-CoV-2 Variants
 
-## Step 5 – Analysis of Real SARS-CoV-2 RBD Variants
+This step aims to evaluate the energetic effect of **real SARS-CoV-2 Spike RBD mutations** (Alpha, Beta, Delta variants) on the interaction with the ACE2 receptor. The analysis follows the same energy pipeline used in previous steps, but replacing alanine mutations with biologically relevant substitutions.
 
-Goal of Step 5
+## 5.1 Starting Structure
 
-The objective of **Step 5** is to evaluate the energetic effect of **real SARS-CoV-2 Spike RBD mutations** (Alpha, Beta, Delta variants) on the interaction with ACE2.
+All mutations were generated from the wild-type Spike–ACE2 complex:
 
-For each mutation, we:
+```         
+6m0j_fixed.pdb
+```
 
-1.  Generate a mutated structure.
+------------------------------------------------------------------------
 
-2.  Recalculate solvent accessibility.
+## 5.2 Selecting a Specific Residue in PyMOL (IMPORTANT)
 
-3.  Convert the structure to PDBQT format.
+To avoid mistakes, residues are selected **explicitly by chain and residue number** using PyMOL commands
 
-4.  Compute the interaction energy.
-
-5.  Compare mutant vs wild-type using ΔΔG.
-
-$$\Delta\Delta G = \Delta G_{mutant} - \Delta G_{WT}$$
-    ​
-
-### Starting Structure
-
-All mutations were generated from the wild-type complex: **"6m0j_fixed.pdb"**
-
-This file contains the full ACE2–Spike RBD complex and was used as the starting point for all mutations.
-
-### Step 5.1 – Creating Mutations in PyMOL
-Load the wild-type structure
+### Load the structure
 
 ``` pymol
+delete all
 load 6m0j_fixed.pdb
 ```
 
-### Open the mutagenesis tool
+### Highlight the RBD chain (chain E)
+
+``` pymol
+show cartoon
+color gray
+color orange, chain E
+```
+
+![](images/clipboard-3248303220.png){width="374"}
+
+### Select the target residue (example: E484 in chain E)
+
+``` pymol
+select target_res, chain E and resi 484
+show sticks, target_res
+zoom target_res, 5
+```
+
+At this point, only the selected residue should appear in stick representation.
+
+![](images/clipboard-902392593.png){width="256"}
+
+Examples of commonly used mutations:
+
+``` pymol
+# N501Y (Alpha / Beta)
+select target_res, chain E and resi 501
+
+# E484K (Beta)
+select target_res, chain E and resi 484
+
+# L452R (Delta)
+select target_res, chain E and resi 452
+```
+
+------------------------------------------------------------------------
+
+## 5.3 Generating the Mutation with PyMOL
+
+### Activate the mutagenesis wizard
 
 ``` pymol
 wizard mutagenesis
 ```
 
-### Select the residue to mutate
+-   Click directly on the residue shown in sticks.
 
--   The residue is selected **by clicking directly on it** in the structure.
-
--   All mutations were performed on **chain E (RBD)**.
-
--   Examples:
-
-    -   N501Y (Alpha/Beta)
-
-    -   E484K (Beta)
-
-    -   L452R (Delta)
-
-### Chose the new AA (aminoacid)
-
--   Select the new residue in *Mutate to*.
+-   In the wizard panel, choose the new amino acid.
 
 -   Activate **Backbone Dependent Rotamers**.
 
--   Browse rotamers and choose the one with **minimum steric clashes**.
+-   Browse rotamers and select the one with minimal steric clashes.
 
 -   Click **Apply** to confirm the mutation.
 
 ### Save the mutated complex
 
-``` pymol
-save mut_<MUTATION>_complex.pdb
+```         
 wizard off
+save mut_<MUTATION>_complex.pdb
 ```
 
-Example:
+AFTER the mutated complex:
+
+![](images/clipboard-4189905293.png){width="256"}
+
+And now it's time to repeat until get the examples:
 
 ```         
 mut_N501Y_complex.pdb
@@ -250,9 +268,16 @@ mut_E484K_complex.pdb
 mut_L452R_complex.pdb
 ```
 
-### Step 5.2 – Splitting Chains (ACE2 and RBD)
+``` pymol
+delete all
+load 6m0j_fixed.pdb
+...
+...
+```
 
-Each mutated complex is split into its components:
+## 5.4 Splitting ACE2 and RBD Chains
+
+The mutated complex is split into ACE2 and RBD components:
 
 ``` pymol
 select ACE2, chain A
@@ -262,58 +287,74 @@ select RBD, chain E
 save mut_<MUTATION>_B.pdb, RBD
 ```
 
-Files generated (in your folder):
+Generated files:
 
 ```         
 mut_<MUTATION>_A.pdb
 mut_<MUTATION>_B.pdb
 ```
 
-### Step 5.3 – Solvent Accessible Surface Area (NACCESS)
+## 5.5 Structure Preparation with `check_structure`
 
-For each mutation, NACCESS is run on:
+PyMOL only rotates side chains and does **not** fix hydrogens or assign proper charges.
+Therefore, **biobb_structure_checking** must be used before energy calculations.
 
--   the complex
+Generate PDBQT with correct hydrogens and ADT charges
 
--   ACE2 alone
-
--   RBD alone
-
-```         
-naccess mut_<MUTATION>_complex.pdb
-naccess mut_<MUTATION>_A.pdb
-naccess mut_<MUTATION>_B.pdb
+``` bash
+check_structure \
+  -i mut_<MUTATION>_complex.pdb \
+  -o mut_<MUTATION>_complex.pdbqt \
+  add_hydrogen \
+  --add_charges ADT \
+  --add_mode auto
 ```
 
-This generates:
+This step ensures:
+
+-   Correct hydrogen placement
+
+-   Proper AutoDock-compatible charges
+
+-   Consistency with the energy calculation scripts
 
 ```         
+...
+...
+Structure saved on mut_N501Y_complex.pdbqt
+```
+
+And now repeat the same for the other ones.
+
+------------------------------------------------------------------------
+
+## 5.6 Solvent Accessible Surface Area (NACCESS)
+
+Solvent accessibility is recalculated for each mutated system:
+
+``` bash
+./naccess mut_<MUTATION>_complex.pdb
+./naccess mut_<MUTATION>_A.pdb
+./naccess mut_<MUTATION>_B.pdb
+```
+
+Generated files:
+
+``` bash
 mut_<MUTATION>_complex.asa
 mut_<MUTATION>_A.asa
 mut_<MUTATION>_B.asa
 ```
 
+## 5.7 Interaction Energy Calculation
 
-### Step 5.4 – Generating PDBQT Files
+The interaction energy is computed using the provided Python function:
 
-The mutated complex is converted to PDBQT format using OpenBabel:
-
-```         
-obabel -ipdb mut_<MUTATION>_complex.pdb -opdbqt -O mut_<MUTATION>_complex.pdbqt
-```
-
-This file is required for energy calculations.
-
-
-### Step 5.5 – Energy Calculation (Python)
-
-Interaction energies are calculated using the provided function:
-
-```         
+``` python
 compute_interaction_energy()
 ```
 
-A dedicated Python script is created **for each mutation**, for example:
+A dedicated script is used for each mutation (provided in the folder), for example:
 
 ```         
 step5_N501Y_energy.py
@@ -323,67 +364,63 @@ step5_L452R_energy.py
 
 Each script:
 
-1.  Computes WT interaction energy.
+1.  Computes wild-type interaction energy
 
-2.  Computes mutant interaction energy.
+2.  Computes mutant interaction energy
 
-3.  Calculates ΔΔG.
+3.  Calculates ΔΔG = ΔG_mut − ΔG_WT
 
-Example output:
+Example execution:
 
-```         
+``` bash
+$ python3 step5_N501Y_energy.py
+Output:
+'''
+Calculating WT interaction energy...
 WT ΔG = -71.152 kcal/mol
-N501Y ΔG = -70.006 kcal/mol
-ΔΔG (N501Y) = +1.147 kcal/mol
+
+Calculating N501Y mutant interaction energy...
+N501Y ΔG = -65.788 kcal/mol
+
+==============================
+ΔΔG (N501Y) = 5.364 kcal/mol
+==============================
+'''
+
+
+$ python step5_E484K_energy.py 
+Output:
+'''
+Calculating WT interaction energy...
+WT ΔG = -71.152 kcal/mol
+
+Calculating E484K mutant interaction energy...
+E484K ΔG = -75.898 kcal/mol
+
+==============================
+ΔΔG (E484K) = -4.745 kcal/mol
+==============================
+'''
+
+$ python step5_L452R_energy.py 
+Output:
+'''
+Calculating WT interaction energy...
+WT ΔG = -71.152 kcal/mol
+
+Calculating L452R mutant interaction energy...
+L452R ΔG = -69.808 kcal/mol
+
+==============================
+ΔΔG (L452R) = 1.345 kcal/mol
+==============================
+'''
 ```
 
+## Summary
 
-### Files Generated per Mutation
+Among the analyzed variants, **E484K** emerged as the most relevant mutation, as it showed a clearly stabilizing effect on the complex (ΔΔG = −4.745 kcal/mol). This indicates a stronger interaction compared to the wild-type structure and highlights the importance of electrostatic contributions at the binding interface.
 
-For each mutation, the following files are produced:
+In contrast, **L452R** exhibited only a mild destabilizing effect, suggesting a limited influence on binding affinity within the scope of this model. The **N501Y** mutation resulted in a destabilizing ΔΔG, which contrasts with experimental observations and reflects the limitations of a simplified, static energy approach that does not capture conformational flexibility.
 
-```         
-mut_<MUTATION>_complex.pdb
-mut_<MUTATION>_complex.pdbqt
-mut_<MUTATION>_complex.asa
-mut_<MUTATION>_A.pdb
-mut_<MUTATION>_A.asa
-mut_<MUTATION>_B.pdb
-mut_<MUTATION>_B.asa
-step5_<MUTATION>_energy.py
-```
-
-
-### Notes on Results
-
--   **ΔΔG \> 0** → mutation destabilizes binding.
-
--   **ΔΔG \< 0** → mutation stabilizes binding.
-
--   Small or similar values are normal for single-residue mutations.
-
-
-### Important Note (Beta and Delta Mutations)
-
-If Beta (E484K) and Delta (L452R) give identical or zero energies:
-
--   The mutation may not have been correctly saved.
-
--   The PDBQT may not preserve chain IDs.
-
--   The `.asa` files may not correspond to the mutated structure.
-
-In this case:
-
--   Re-save the mutated complex in PyMOL.
-
--   Re-run NACCESS.
-
--   Re-generate the PDBQT.
-
--   Re-run the Python energy script.
-
-
-### Summary
-
-Step 5 extends alanine scanning to **real viral variants**, using the same energy pipeline applied to biologically relevant mutations. The workflow is fully reproducible and modular, allowing easy comparison between Alpha, Beta, and Delta substitutions.
+Overall, these results suggest that **E484K is the most energetically impactful mutation** in this analysis, emphasizing how specific substitutions can dominate interaction energetics.
