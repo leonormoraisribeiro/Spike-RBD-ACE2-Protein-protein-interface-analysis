@@ -18,7 +18,7 @@
 │   ├── structure_setup.py   # Setup pipeline using biobb
 │   ├── interface_analysis.py # Interface detection (Distance & ASA)
 │   └── energy_calculation.py
-├── Python Scripts/
+├── Visualizations/
 │   ├── alanine_scan_results.csv
 │   ├── alanine_scanning_plot.png # plot made for Step3
 │   ├── hotspot.png
