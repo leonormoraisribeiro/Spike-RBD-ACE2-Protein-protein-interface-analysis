@@ -203,8 +203,6 @@ color gray
 color orange, chain E
 ```
 
-![](images/clipboard-3248303220.png){width="374"}
-
 ### Select the target residue (example: E484 in chain E)
 
 ``` pymol
@@ -214,8 +212,6 @@ zoom target_res, 5
 ```
 
 At this point, only the selected residue should appear in stick representation.
-
-![](images/clipboard-902392593.png){width="256"}
 
 Examples of commonly used mutations:
 
@@ -256,10 +252,6 @@ wizard mutagenesis
 wizard off
 save mut_<MUTATION>_complex.pdb
 ```
-
-AFTER the mutated complex:
-
-![](images/clipboard-4189905293.png){width="256"}
 
 And now it's time to repeat until get the examples:
 
