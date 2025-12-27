@@ -169,6 +169,28 @@ The analysis identified specific "Hotspots" that are critical for the RBD-ACE2 i
 | `visualize_hotspots.pml` |  PyMOL script to visualize Phe486/Tyr505 anchoring into ACE2. |
 
 ---
+## Step 4: Structural Visualization & Interface Mapping
+
+**Objective:** To visually correlate the quantitative energetic findings (from Steps 2 & 3) with the 3D structural context of the interface, using high-quality rendering scripts.
+
+### 4.1 Visualization Strategy
+We developed custom **PyMOL scripts** (`.pml`) to ensure reproducibility and standard viewing angles. The visualization focused on two key aspects:
+
+1.  **Energetic Hotspots Mapping:**
+    * **Script:** `visualize_hotspots.pml`
+    * **Method:** Highlights the critical residues identified in Alanine Scanning (**Phe486, Tyr505**) in **Red**, while adjacent interacting residues are colored in **Marine Blue**.
+    * **Details:** Displays polar contacts (hydrogen bonds) as dashed lines and sets the view to orthoscopic mode to remove perspective distortion.
+
+2.  **Hydrophobic Complementarity:**
+    * **Script:** `visualize_hydrophobicity.pml`
+    * **Method:** Maps the hydrophobic character of the interface.
+    * **Coloring:** Hydrophobic residues (e.g., Phe, Leu, Val) are rendered in **Orange**, while polar residues are **White**.
+    * **Key Insight:** Visually demonstrates the "Hydrophobic Anchor" mechanism, where **Phe486** (RBD) inserts deeply into a complementary hydrophobic pocket on the ACE2 surface.
+
+### 4.2 Output Files
+All visualization scripts and rendered images are stored in the `Visualizations/` folder.
+
+---
 
 # Step 5 – Modeling Real SARS-CoV-2 Variants
 
