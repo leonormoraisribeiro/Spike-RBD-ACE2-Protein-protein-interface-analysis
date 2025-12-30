@@ -83,8 +83,8 @@ plt.xticks(df_sorted.index, df_sorted["Label"], rotation=90, fontsize=9)
 plt.axhline(y=0, color='black', linewidth=1)
 plt.axhline(y=DDG_THRESHOLD, color='gray', linestyle='--', linewidth=1, label=f'Threshold ({DDG_THRESHOLD} kcal/mol)')
 
-plt.ylabel('$\Delta\Delta G$ (kcal/mol) - (Positivo = Desestabiliza)')
-plt.title('Alanine Scanning In-Silico: Contribuição por Resíduo')
+plt.ylabel('$\Delta\Delta G$ (kcal/mol) - (Positive = Destabilizing)')
+plt.title('Alanine Scanning In-Silico: Contribution per Residue')
 plt.legend()
 
 for i, row in df_sorted.iterrows():
@@ -97,5 +97,4 @@ plt.tight_layout()
 
 # Save image
 plt.savefig(PLOT_FILENAME, dpi=300)
-print(f"Gráfico guardado como: {PLOT_FILENAME}")
 plt.show()
