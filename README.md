@@ -15,7 +15,11 @@
 │   ├── *.asa                # Atomic solvent accessibility (for Energy calc)
 │   └── *.rsa                # Residue solvent accessibility (for Analysis)
 │   ├── FoldX/
-│   │   ├── 
+│   │   ├── command_buildmodel.txt      # Configuration file for mutagenesis
+│   │   ├── Dif_6m0j_fixed.fxout        # Stability changes (ΔΔG) for generated mutants
+│   │   ├── Raw_6m0j_fixed.fxout        # Detailed energy decomposition terms
+│   │   ├── Interaction_*.fxout         # Binding energy analysis (RBD-ACE2 interface)
+│   │   └── *_1.pdb                     # Generated 3D structures of mutants
 ├── Python Scripts/
 │   ├── structure_setup.py   # Setup pipeline using biobb
 │   ├── interface_analysis.py # Interface detection (Distance & ASA)
