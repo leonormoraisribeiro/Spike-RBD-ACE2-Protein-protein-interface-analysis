@@ -14,6 +14,8 @@
 │   ├── 6m0j_fixed.pdbqt     # Structure with partial charges and atom types
 │   ├── *.asa                # Atomic solvent accessibility (for Energy calc)
 │   └── *.rsa                # Residue solvent accessibility (for Analysis)
+│   ├── FoldX/
+│   │   ├── 
 ├── Python Scripts/
 │   ├── structure_setup.py   # Setup pipeline using biobb
 │   ├── interface_analysis.py # Interface detection (Distance & ASA)
