@@ -432,10 +432,62 @@ L452R ΔG = -69.808 kcal/mol
 '''
 ```
 
+## 5.8 Comparative Analysis using FoldX
+
+**Objective:** To validate the results obtained with the manual PyMOL/Python pipeline, we performed the same variant analysis using **FoldX**. This automated force-field approach allows us to calculate both the **internal stability** () and the **binding affinity** () of the mutants.
+
+### 5.8.1 Methodology (FoldX Pipeline)
+
+The analysis was performed in two stages for each variant (Alpha, Beta, Delta):
+
+1. **Mutagenesis (BuildModel):**
+Generates the mutant PDB structure and calculates the stability change of the protein monomer (internal structural stress).
+* *Command:* `./foldx --command=BuildModel --pdb=6m0j_fixed_Repair.pdb --mutant-file=individual_list.txt`
+
+
+2. **Interaction Analysis (AnalyseComplex):**
+Calculates the interaction energy between Chain A (ACE2) and Chain E (RBD) for the generated mutant structures.
+* *Command:* `./foldx --command=AnalyseComplex --pdb=[Mutant_PDB] --analyseComplexChains=A,E`
+
+
+
+### 5.8.2 FoldX Results
+
+The table below summarizes the energetic changes calculated by FoldX.
+
+* **:** Calculated as . Negative values indicate **stronger** binding.
+
+| Variant | Mutation | Stability  (kcal/mol) | Interaction Energy (kcal/mol) | Binding  (kcal/mol) | Prediction |
+| --- | --- | --- | --- | --- | --- |
+| **Wild Type** | -- | 0.00 | **-13.87** | -- | Reference |
+| **Alpha** | N501Y | +9.34 (Unstable) | -10.43 | **+3.44** | Weaker Binding |
+| **Beta** | E484K | +0.35 (Neutral) | -14.63 | **-0.76** | **Stronger Binding** |
+| **Delta** | L452R | +0.35 (Neutral) | -13.88 | **-0.01** | Neutral |
+
+### 5.8.3 Method Comparison (Manual vs. FoldX)
+
+Comparing the results from the manual PyMOL/Python pipeline (Section 5.7) with FoldX:
+
+1. **Consensus on Beta (E484K):** Both methods identify **E484K** as the most significant mutation for increasing binding affinity (Manual: -4.7 kcal/mol | FoldX: -0.76 kcal/mol). This confirms that electrostatic interactions (Glu  Lys) play a major role in stabilizing the RBD-ACE2 interface.
+2. **Discrepancy on Alpha (N501Y):** Both methods fail to capture the experimentally known increased affinity of N501Y. FoldX assigns a high penalty (+9.34 stability / +3.44 binding) due to steric clashes of the large Tyrosine ring. This highlights the limitation of **rigid-body** approaches; in reality, the backbone adjusts to accommodate the mutation, which these static models cannot simulate.
+3. **Neutrality of Delta (L452R):** Both methods agree that L452R has a negligible direct effect on the interaction energy with ACE2.
+
 ## Summary
 
-Among the analyzed variants, **E484K** emerged as the most relevant mutation, as it showed a clearly stabilizing effect on the complex (ΔΔG = −4.745 kcal/mol). This indicates a stronger interaction compared to the wild-type structure and highlights the importance of electrostatic contributions at the binding interface.
+The comparative analysis of SARS-CoV-2 variants using both the manual energy pipeline (Step 5.7) and the automated FoldX force field (Step 5.8) revealed consistent trends regarding the impact of specific mutations on RBD-ACE2 binding affinity.
 
-In contrast, **L452R** exhibited only a mild destabilizing effect, suggesting a limited influence on binding affinity within the scope of this model. The **N501Y** mutation resulted in a destabilizing ΔΔG, which contrasts with experimental observations and reflects the limitations of a simplified, static energy approach that does not capture conformational flexibility.
+**1. Beta Variant (E484K): The Strongest Binder**
+Both methods identified **E484K** as the most energetically significant mutation.
 
-Overall, these results suggest that **E484K is the most energetically impactful mutation** in this analysis, emphasizing how specific substitutions can dominate interaction energetics.
+* **Manual Calculation:**  kcal/mol.
+* **FoldX Prediction:**  kcal/mol.
+This consensus confirms that the substitution of Glutamate (negative) for Lysine (positive) significantly enhances the electrostatic attraction at the interface, making this the most relevant mutation for binding affinity in our *in silico* models.
+
+**2. Alpha Variant (N501Y): The Limitation of Rigid Models**
+Both approaches predicted a **destabilizing effect** (weaker binding) for the N501Y mutation, with FoldX assigning a specifically high penalty due to steric clashes (+3.44 kcal/mol). This contradicts experimental evidence, which shows N501Y increases affinity. This discrepancy highlights a key limitation of our methodology: both the manual script and FoldX rely on **rigid-body approximations**. They fail to capture the backbone flexibility and local rearrangement required to accommodate the bulky Tyrosine side chain, leading to "false negative" predictions for this specific residue.
+
+**3. Delta Variant (L452R): Neutral Impact**
+The L452R mutation showed a negligible to mild impact in both models (FoldX  kcal/mol). This suggests that the evolutionary advantage of the Delta variant is likely not driven by a direct increase in ACE2 binding affinity, but potentially by other factors such as antibody escape or protein stability that are outside the scope of this interface-focused analysis.
+
+**Conclusion**
+Overall, the results consistently point to **E484K as the most energetically impactful mutation** within the scope of static structural models. The agreement between the two independent computational methods reinforces the critical role of electrostatics in modulating the RBD-ACE2 interaction.
